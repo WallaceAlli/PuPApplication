@@ -10,6 +10,10 @@ import TeacherHomePageButton from './components/TeacherHomePageButton';
 import TeacherScanQRScreenButton from './components/TeacherScanQRScreenButton';
 import TeacherChatScreenButton from './components/TeacherChatScreen';
 import TeacherQueueScreenButton from './components/TeacherQueueScreen';
+import ParentHomePageButton from './components/ParentHomePageButton';
+import GenerateQRScreenButton from './components/GenerateQRScreenButton';
+import RequestPickUpScreenButton from './components/RequestPickUpScreenButton';
+import CalendarScreenButton from './components/CalendarScreenButton';
 
 export default function App() {
   const [screen, showScreen] = useState(0);
@@ -17,7 +21,7 @@ export default function App() {
   /*Redundant code:
   const [showLoginScreen, setshowLoginScreen] = useState(0);
   const [loginVerified, setverifyLogin]= useState(0);*/
-  const [text, setText]= useState('');
+  const [email, setEmailForLogin]= useState('');
   return (
     <SafeAreaProvider>
       {
@@ -30,14 +34,15 @@ export default function App() {
             </View>
             <View style = {styles.LoginTextInput}>
               <Text style={styles.loginText}> Login </Text>
-              <TextInput style={styles.loginInput} placeholder="Enter Email" onChangeText={userName => setText(userName)}/>
+              <TextInput style={styles.loginInput} placeholder="Enter Email" onChangeText={email => setEmailForLogin(email)}/>
               <TextInput style={styles.loginInput} secureTextEntry={true} placeholder="Enter Password" onChangeText={userName => setText(userName)}/>
+              <Text>{email .split(' ')}</Text>
             </View>
             <View style={styles.registerPrompt}> 
               <Text style={{fontSize: 20}}>New User? </Text>
               <RegisterButton label="Click here to Register!" onPress={() => {showScreen(3)}}> </RegisterButton>
             </View>
-            <View><LoginHereButton label='LOGIN' onPress={() => {showScreen(2)}}/></View>
+            <View><LoginHereButton label='LOGIN' onPress={() => {showScreen(8)}}/></View>
             <View style={styles.loginBottomBorder}>
               <Text>By continuing you agree with Pick Up Pals Terms of Service and Private Policy.</Text>
             </View>
@@ -51,7 +56,7 @@ export default function App() {
             <StatusBar style="auto"/>
         </View>
       :
-      screen == 2? //Home Screen
+      screen == 2? //Teacher Home Screen
       <View style={styles.container}>
         <View style={styles.SafeArea}>
           <View style={styles.teacherTopBorder}>
@@ -176,7 +181,89 @@ export default function App() {
           </View>
         </View>
       </View> 
-
+      :
+      screen == 8? //Parent Home Screen
+      <View style={styles.container}>
+        <View style={styles.SafeArea}>
+          <View style={styles.teacherTopBorder}>
+            <Image style={{width: 60, height: 60}} source={require('./assets/PuPIcon.png')}></Image>
+            <Text style={{width: 240, fontSize: 40, color: '#fff', letterSpacing: 10}}> PUP </Text>
+            <ProfileDropDownButton></ProfileDropDownButton>
+          </View>
+          <View style={styles.teacherhomePageMiddle}>
+            <Text style={{fontSize: 30, textDecorationLine: 'underline'}}> Announcements: </Text>
+            <Text style={{fontSize: 18, padding: 5, height: 260, backgroundColor: '#aaa'}}>This is a sample announcement. We should put that there are no pickups on dead day for our demo.</Text>
+            <Text style={{fontSize: 30, textDecorationLine: 'underline'}}> Notifications: </Text>
+            <Text style={{fontSize: 18, padding: 5, height: 260, backgroundColor: '#aaa'}}>This is a sample notification. We should put the kids we are going to be picking pup for our demo</Text>
+          </View>
+          <View style={styles.teacherBottomBorder}>
+            <ParentHomePageButton onPress={() => showScreen(8)}></ParentHomePageButton>
+            <GenerateQRScreenButton onPress={() => showScreen(9)}></GenerateQRScreenButton>
+            <RequestPickUpScreenButton onPress={() => showScreen(10)}></RequestPickUpScreenButton>
+            <CalendarScreenButton onPress={() => showScreen(11)}></CalendarScreenButton>
+          </View>
+        </View>
+      </View> 
+      :
+      screen == 9? //Generate QR Screen
+      <View style={styles.container}>
+        <View style={styles.SafeArea}>
+          <View style={styles.teacherTopBorder}>
+            <Image style={{width: 60, height: 60}} source={require('./assets/PuPIcon.png')}></Image>
+            <Text style={{width: 240, fontSize: 40, color: '#fff', letterSpacing: 10}}> PUP </Text>
+            <ProfileDropDownButton></ProfileDropDownButton>
+          </View>
+          <View style={styles.teacherhomePageMiddle}>
+            <Text style={{fontSize: 30, textDecorationLine: 'underline'}}> Generate QR Screen: </Text>
+          </View>
+          <View style={styles.teacherBottomBorder}>
+            <ParentHomePageButton onPress={() => showScreen(8)}></ParentHomePageButton>
+            <GenerateQRScreenButton onPress={() => showScreen(9)}></GenerateQRScreenButton>
+            <RequestPickUpScreenButton onPress={() => showScreen(10)}></RequestPickUpScreenButton>
+            <CalendarScreenButton onPress={() => showScreen(11)}></CalendarScreenButton>
+          </View>
+        </View>
+      </View> 
+      :
+      screen == 10? //Request Pick up Screen
+      <View style={styles.container}>
+        <View style={styles.SafeArea}>
+          <View style={styles.teacherTopBorder}>
+            <Image style={{width: 60, height: 60}} source={require('./assets/PuPIcon.png')}></Image>
+            <Text style={{width: 240, fontSize: 40, color: '#fff', letterSpacing: 10}}> PUP </Text>
+            <ProfileDropDownButton></ProfileDropDownButton>
+          </View>
+          <View style={styles.teacherhomePageMiddle}>
+            <Text style={{fontSize: 30, textDecorationLine: 'underline'}}> Request Pick up screen: </Text>
+          </View>
+          <View style={styles.teacherBottomBorder}>
+            <ParentHomePageButton onPress={() => showScreen(8)}></ParentHomePageButton>
+            <GenerateQRScreenButton onPress={() => showScreen(9)}></GenerateQRScreenButton>
+            <RequestPickUpScreenButton onPress={() => showScreen(10)}></RequestPickUpScreenButton>
+            <CalendarScreenButton onPress={() => showScreen(11)}></CalendarScreenButton>
+          </View>
+        </View>
+      </View>
+      :
+      screen == 11? //Calendar Screen
+      <View style={styles.container}>
+        <View style={styles.SafeArea}>
+          <View style={styles.teacherTopBorder}>
+            <Image style={{width: 60, height: 60}} source={require('./assets/PuPIcon.png')}></Image>
+            <Text style={{width: 240, fontSize: 40, color: '#fff', letterSpacing: 10}}> PUP </Text>
+            <ProfileDropDownButton></ProfileDropDownButton>
+          </View>
+          <View style={styles.teacherhomePageMiddle}>
+            <Text style={{fontSize: 30, textDecorationLine: 'underline'}}> Calendar screen: </Text>
+          </View>
+          <View style={styles.teacherBottomBorder}>
+            <ParentHomePageButton onPress={() => showScreen(8)}></ParentHomePageButton>
+            <GenerateQRScreenButton onPress={() => showScreen(9)}></GenerateQRScreenButton>
+            <RequestPickUpScreenButton onPress={() => showScreen(10)}></RequestPickUpScreenButton>
+            <CalendarScreenButton onPress={() => showScreen(11)}></CalendarScreenButton>
+          </View>
+        </View>
+      </View>
 
       :
       <View></View> //Empty view should never be reached, for some reason I get error where there's no else statement
