@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 import {Text, StyleSheet, Pressable, View, TextInput, Image} from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import Button from './components/Button';
+import GenericTextButton from './components/GenericTextButton';
 import LoginHereButton from './components/LoginHereButton';
 import RegisterButton from './components/RegisterButton';
 import ProfileDropDownButton from './components/ProfileDropDownButton';
@@ -14,9 +14,13 @@ import ParentHomePageButton from './components/ParentHomePageButton';
 import GenerateQRScreenButton from './components/GenerateQRScreenButton';
 import RequestPickUpScreenButton from './components/RequestPickUpScreenButton';
 import CalendarScreenButton from './components/CalendarScreenButton';
+import ChildButtonRenderer from './components/ChildButtonRenderer';
+
+
 
 export default function App() {
   const [screen, showScreen] = useState(0);
+  const [numChildren, changeChildren] = useState(2);
   // [0 = preLogin screen, 1= loginScreen, 2 = loginVerified]
   /*Redundant code:
   const [showLoginScreen, setshowLoginScreen] = useState(0);
@@ -52,7 +56,7 @@ export default function App() {
       screen == 0? //Pre-Login Screen
         <View style={styles.container}>
             <Text>HOME PAGE</Text>
-            <Button label="Login" onPress={() => showScreen(1)}/> 
+            <GenericTextButton label="Login" onPress={() => showScreen(1)}/> 
             <StatusBar style="auto"/>
         </View>
       :
@@ -118,7 +122,7 @@ export default function App() {
         </View>
         <View style={{width: 375, height: 600, justifyContent: 'center', alignItems: 'center'}}>
           <Text style={{fontSize: 20,textAlign: 'center', padding: 10}}> Thank you for creating an account with Pick Up Pals. You will now be redirected to the login screen where you can login to your new account! </Text>
-          <Button label="Continue" onPress={() => showScreen(1)}></Button>
+          <GenericTextButton label="Continue" onPress={() => showScreen(1)}></GenericTextButton>
         </View>
       </View>
       :
@@ -213,8 +217,10 @@ export default function App() {
             <Text style={{width: 240, fontSize: 40, color: '#fff', letterSpacing: 10}}> PUP </Text>
             <ProfileDropDownButton></ProfileDropDownButton>
           </View>
-          <View style={styles.teacherhomePageMiddle}>
-            <Text style={{fontSize: 30, textDecorationLine: 'underline'}}> Generate QR Screen: </Text>
+          <View style={styles.childrenToPickUpViewStyle}>
+            <Text style={{fontSize: 20, textDecorationLine: 'underline'}}> Which Children would you like to Pick up Today? </Text>
+            <ChildButtonRenderer numChildren={numChildren} names={['timmy', 'jimmy']}></ChildButtonRenderer>
+            <GenericTextButton label="Generate QR Code"></GenericTextButton>
           </View>
           <View style={styles.teacherBottomBorder}>
             <ParentHomePageButton onPress={() => showScreen(8)}></ParentHomePageButton>
@@ -234,7 +240,7 @@ export default function App() {
             <ProfileDropDownButton></ProfileDropDownButton>
           </View>
           <View style={styles.teacherhomePageMiddle}>
-            <Text style={{fontSize: 30, textDecorationLine: 'underline'}}> Request Pick up screen: </Text>
+            <Text style={{fontSize: 30, textDecorationLine: 'underline'}}> Request Pick Up Screen: </Text>
           </View>
           <View style={styles.teacherBottomBorder}>
             <ParentHomePageButton onPress={() => showScreen(8)}></ParentHomePageButton>
@@ -314,6 +320,13 @@ const styles = StyleSheet.create({
     width: 360,
     backgroundColor: '#aaa',
   },
+  childrenToPickUpViewStyle: {
+    flex: .75,
+    width: 375,
+    backgroundColor: '#fff',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+  },  
   registerPrompt: {
     flexDirection: 'row',
   },
@@ -369,13 +382,13 @@ const styles = StyleSheet.create({
     width: 375,
     justifyContent: 'flex-start', //Puts Home Screen at the top
     alignItems: 'center', //Puts home screen at center alligned
-    backgroundColor: "#1E31DA", //Purple
+    backgroundColor: "#1E31DA",
     flexDirection: 'row',
   },
   teacherhomePageMiddle:{
     flex: .75,
     width: 375,
-    backgroundColor: '#fff' //Light Blue
+    backgroundColor: '#fff'
   },
   teacherBottomBorder:{
     flex: .15,

@@ -1,6 +1,6 @@
 import { StyleSheet, View, Pressable, Text, Image } from 'react-native';
 
-export default function Button({ label, onPress }) {
+export default function GenericTextButton({ label, onPress }) {
   return (
     <View style={styles.buttonContainer}>
       

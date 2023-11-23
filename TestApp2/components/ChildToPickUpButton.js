@@ -1,10 +1,10 @@
-﻿import { StyleSheet, View, Pressable, Text, Image } from 'react-native';
+import { StyleSheet, View, Pressable, Text, Image } from 'react-native';
 
-export default function ParentHomePageButton({ label, onPress }) {
+export default function ChildToPickUpButton({ label, onPress }) {
   return (
     <View style={styles.buttonContainer}>
       <Pressable style={styles.button} onPress={onPress}>
-        <Image style={{width: 50, height: 50}} source={require('../assets/HomePageButton.png')}></Image>
+        <Text style={styles.buttonLabel}>{label}</Text>
       </Pressable>
     </View>
   );
@@ -12,20 +12,19 @@ export default function ParentHomePageButton({ label, onPress }) {
 
 const styles = StyleSheet.create({
   buttonContainer: {
-    width: 75,
-    height: 75,
+    width: 300,
+    height: 50,
     marginHorizontal: 20,
-    backgroundColor: '#1E31DA',
     alignItems: 'center',
     justifyContent: 'center',
     padding: 3,
     borderColor: '#000',
-    borderRadius: 100,
+    borderRadius: 15,
     borderWidth: 3,
+    backgroundColor: '#aaa',
   },
   button: {
     borderRadius: 10,
-    
     width: '100%',
     height: '100%',
     alignItems: 'center',

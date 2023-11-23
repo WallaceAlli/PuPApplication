@@ -1,18 +1,24 @@
 ﻿import { StyleSheet, View, Pressable, Text, Image } from 'react-native';
+import ChildToPickUpButton from './ChildToPickUpButton';
 
-export default function ParentHomePageButton({ label, onPress }) {
+export default function ChildButtonRenderer({ numChildren, onPress, names }) {
+  var buttons = [];
+  for (var i = 0;  i < numChildren; i++)
+  {
+    buttons.push(
+      <ChildToPickUpButton label={names[i]}></ChildToPickUpButton>
+    )
+  }
   return (
-    <View style={styles.buttonContainer}>
-      <Pressable style={styles.button} onPress={onPress}>
-        <Image style={{width: 50, height: 50}} source={require('../assets/HomePageButton.png')}></Image>
-      </Pressable>
+    <View style={{flex: 1, justifyContent: 'space-evenly', flexDirection: 'column'}}>
+    {buttons}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   buttonContainer: {
-    width: 75,
+    width: 250,
     height: 75,
     marginHorizontal: 20,
     backgroundColor: '#1E31DA',
@@ -20,7 +26,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     padding: 3,
     borderColor: '#000',
-    borderRadius: 100,
+    borderRadius: 15,
     borderWidth: 3,
   },
   button: {
