@@ -15,6 +15,7 @@ import GenerateQRScreenButton from './components/GenerateQRScreenButton';
 import RequestPickUpScreenButton from './components/RequestPickUpScreenButton';
 import CalendarScreenButton from './components/CalendarScreenButton';
 import ChildButtonRenderer from './components/ChildButtonRenderer';
+import QRCode from './components/QRCode';
 
 
 
@@ -219,7 +220,7 @@ export default function App() {
           </View>
           <View style={styles.childrenToPickUpViewStyle}>
             <Text style={{fontSize: 20, textDecorationLine: 'underline'}}> Which Children would you like to Pick up Today? </Text>
-            <ChildButtonRenderer numChildren={numChildren} names={['timmy', 'jimmy']}></ChildButtonRenderer>
+            <ChildButtonRenderer numChildren={numChildren} names={['Timmy', 'Jimmy']}></ChildButtonRenderer>
             <GenericTextButton label="Generate QR Code"></GenericTextButton>
           </View>
           <View style={styles.teacherBottomBorder}>
@@ -241,6 +242,7 @@ export default function App() {
           </View>
           <View style={styles.teacherhomePageMiddle}>
             <Text style={{fontSize: 30, textDecorationLine: 'underline'}}> Request Pick Up Screen: </Text>
+            <QRCode></QRCode>
           </View>
           <View style={styles.teacherBottomBorder}>
             <ParentHomePageButton onPress={() => showScreen(8)}></ParentHomePageButton>

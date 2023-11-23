@@ -1,12 +1,15 @@
 ﻿import { StyleSheet, View, Pressable, Text, Image } from 'react-native';
 import ChildToPickUpButton from './ChildToPickUpButton';
+import { useState } from 'react';
 
-export default function ChildButtonRenderer({ numChildren, onPress, names }) {
+
+export default function ChildButtonRenderer({ numChildren, names }) {
   var buttons = [];
+  const [test, setTest] = useState(0);
   for (var i = 0;  i < numChildren; i++)
   {
     buttons.push(
-      <ChildToPickUpButton label={names[i]}></ChildToPickUpButton>
+      <ChildToPickUpButton label={names[i]} ></ChildToPickUpButton>
     )
   }
   return (
@@ -18,16 +21,17 @@ export default function ChildButtonRenderer({ numChildren, onPress, names }) {
 
 const styles = StyleSheet.create({
   buttonContainer: {
-    width: 250,
-    height: 75,
+    width: 300,
+    height: 50,
     marginHorizontal: 20,
-    backgroundColor: '#1E31DA',
     alignItems: 'center',
     justifyContent: 'center',
-    padding: 3,
+    padding: 0,
     borderColor: '#000',
     borderRadius: 15,
     borderWidth: 3,
+    backgroundColor: '#aaa',
+    flexDirection: 'row',
   },
   button: {
     borderRadius: 10,
