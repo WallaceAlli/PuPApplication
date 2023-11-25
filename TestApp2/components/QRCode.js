@@ -1,10 +1,10 @@
 ﻿import { StyleSheet, View, Pressable, Text, Image } from 'react-native';
 import QRCode from 'react-native-qrcode-svg';
 
-export default function QRCode({}) {
+export default function CreateQRCode({info}) {
     return (
       <QRCode
-        value="differentText"
+        value={info}
       />
     );
 }

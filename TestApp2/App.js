@@ -15,7 +15,7 @@ import GenerateQRScreenButton from './components/GenerateQRScreenButton';
 import RequestPickUpScreenButton from './components/RequestPickUpScreenButton';
 import CalendarScreenButton from './components/CalendarScreenButton';
 import ChildButtonRenderer from './components/ChildButtonRenderer';
-import QRCode from './components/QRCode';
+import CreateQRCode from './components/QRCode';
 
 
 
@@ -242,7 +242,7 @@ export default function App() {
           </View>
           <View style={styles.teacherhomePageMiddle}>
             <Text style={{fontSize: 30, textDecorationLine: 'underline'}}> Request Pick Up Screen: </Text>
-            <QRCode></QRCode>
+            <CreateQRCode></CreateQRCode>
           </View>
           <View style={styles.teacherBottomBorder}>
             <ParentHomePageButton onPress={() => showScreen(8)}></ParentHomePageButton>
