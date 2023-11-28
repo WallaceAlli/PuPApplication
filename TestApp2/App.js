@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {Text, StyleSheet, Pressable, View, TextInput, Image} from 'react-native';
+import {Text, StyleSheet, Pressable, View, TextInput, Image, FlatList, ActivityIndicator} from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import GenericTextButton from './components/GenericTextButton';
@@ -16,6 +16,7 @@ import RequestPickUpScreenButton from './components/RequestPickUpScreenButton';
 import CalendarScreenButton from './components/CalendarScreenButton';
 import ChildButtonRenderer from './components/ChildButtonRenderer';
 import CreateQRCode from './components/QRCode';
+import FetchGuardianFirstName from './components/fetchGuardianFirstName';
 
 
 
@@ -27,6 +28,21 @@ export default function App() {
   const [showLoginScreen, setshowLoginScreen] = useState(0);
   const [loginVerified, setverifyLogin]= useState(0);*/
   const [email, setEmailForLogin]= useState('');
+  const [data, setData] = useState([]);
+
+  const getGuardians = async () => {
+    try {
+      const response = await fetch('http:10.161.133.84:3000/guardians');
+      const json = await response.json();
+      setData(json);
+    } catch (error) {
+      console.error(error);
+    }
+  };  
+
+  useEffect(() => {
+    getGuardians();
+  }, []);
   return (
     <SafeAreaProvider>
       {
@@ -57,7 +73,7 @@ export default function App() {
       screen == 0? //Pre-Login Screen
         <View style={styles.container}>
             <Text>HOME PAGE</Text>
-            <GenericTextButton label="Login" onPress={() => showScreen(1)}/> 
+            <GenericTextButton label="Login" onPress={() => showScreen(-1)}/> 
             <StatusBar style="auto"/>
         </View>
       :
@@ -274,7 +290,17 @@ export default function App() {
       </View>
 
       :
-      <View></View> //Empty view should never be reached, for some reason I get error where there's no else statement
+      <View style={{padding: 100, alignItems: 'center', backgroundColor: '#aaa'}}>
+        <FlatList
+          data={data}
+          keyExtractor={({id}) => id}
+          renderItem={({item}) => (
+            <Text>
+              {item.guardianFirstName}
+            </Text>
+          )}
+        />
+      </View> //Empty view should never be reached, for some reason I get error where there's no else statement
     } 
     </SafeAreaProvider> 
   );

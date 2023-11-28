@@ -20,7 +20,7 @@ const connection = mysql.createPool({
       connection.getConnection(function (err, connection) {
   
       // Executing the MySQL query (select all data from the 'users' table).
-      connection.query('SELECT * FROM guardians', function (error, results, fields) {
+      connection.query('select guardianFirstName, guardianLastName FROM guardians', function (error, results, fields) {
         // If some error occurs, we throw an error.
         if (error) throw error;
   
