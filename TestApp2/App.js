@@ -32,14 +32,13 @@ export default function App() {
 
   const getGuardians = async () => {
     try {
-      const response = await fetch('http:10.161.133.84:3000/guardians');
-      const json = await response.json();
-      setData(json);
+      const response = await fetch('http:10.10.145.12:3000/guardians');
+      const data = await response.json();
+      setData(data);
     } catch (error) {
       console.error(error);
     }
   };  
-
   useEffect(() => {
     getGuardians();
   }, []);
@@ -290,16 +289,8 @@ export default function App() {
       </View>
 
       :
-      <View style={{padding: 100, alignItems: 'center', backgroundColor: '#aaa'}}>
-        <FlatList
-          data={data}
-          keyExtractor={({id}) => id}
-          renderItem={({item}) => (
-            <Text>
-              {item.guardianFirstName}
-            </Text>
-          )}
-        />
+      <View style={{flex: 1, padding: 100,alignItems: 'center', backgroundColor: '#aaa'}}>
+        <Text>{data[0].guardianFirstName}</Text>
       </View> //Empty view should never be reached, for some reason I get error where there's no else statement
     } 
     </SafeAreaProvider> 
