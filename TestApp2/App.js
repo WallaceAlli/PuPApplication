@@ -21,20 +21,32 @@ import FetchGuardianFirstName from './components/fetchGuardianFirstName';
 
 
 export default function App() {
-  const [screen, showScreen] = useState(0);
+  const [screen, showScreen] = useState(-1);
   const [numChildren, changeChildren] = useState(2);
   // [0 = preLogin screen, 1= loginScreen, 2 = loginVerified]
   /*Redundant code:
   const [showLoginScreen, setshowLoginScreen] = useState(0);
   const [loginVerified, setverifyLogin]= useState(0);*/
-  const [email, setEmailForLogin]= useState('');
-  const [data, setData] = useState([]);
-
+  const [username, setUsernameForLogin]= useState('');
+  const [password, setPasswordForLogin] = useState('');
+  const [guardianData, setGuardianData] = useState([]);
+  function verifyLogin(U, P, DB){
+    for(let i = 0; i<Object.keys(DB).length; i++)
+    {
+      if(U == DB[i].guardianUsername && P == DB[i].guardianLastName)
+      {
+        showScreen(2);
+      }
+      else{
+        showScreen(12);
+      }
+    }
+  }
   const getGuardians = async () => {
     try {
-      const response = await fetch('http:10.10.145.12:3000/guardians');
+      const response = await fetch('http:10.161.103.210:3000/guardians');
       const data = await response.json();
-      setData(data);
+      setGuardianData(data);
     } catch (error) {
       console.error(error);
     }
@@ -54,15 +66,14 @@ export default function App() {
             </View>
             <View style = {styles.LoginTextInput}>
               <Text style={styles.loginText}> Login </Text>
-              <TextInput style={styles.loginInput} placeholder="Enter Email" onChangeText={email => setEmailForLogin(email)}/>
-              <TextInput style={styles.loginInput} secureTextEntry={true} placeholder="Enter Password" onChangeText={userName => setText(userName)}/>
-              <Text>{email .split(' ')}</Text>
+              <TextInput style={styles.loginInput} placeholder="Enter Username" onChangeText={username => setUsernameForLogin(username)}/>
+              <TextInput style={styles.loginInput} secureTextEntry={true} placeholder="Enter Password" onChangeText={password => setPasswordForLogin(password)}/>
             </View>
             <View style={styles.registerPrompt}> 
               <Text style={{fontSize: 20}}>New User? </Text>
               <RegisterButton label="Click here to Register!" onPress={() => {showScreen(3)}}> </RegisterButton>
             </View>
-            <View><LoginHereButton label='LOGIN' onPress={() => {showScreen(8)}}/></View>
+            <View><LoginHereButton label='LOGIN' onPress={() => {verifyLogin(username, password, guardianData)}}/></View>
             <View style={styles.loginBottomBorder}>
               <Text>By continuing you agree with Pick Up Pals Terms of Service and Private Policy.</Text>
             </View>
@@ -72,7 +83,7 @@ export default function App() {
       screen == 0? //Pre-Login Screen
         <View style={styles.container}>
             <Text>HOME PAGE</Text>
-            <GenericTextButton label="Login" onPress={() => showScreen(-1)}/> 
+            <GenericTextButton label="Login" onPress={() => showScreen(1)}/> 
             <StatusBar style="auto"/>
         </View>
       :
@@ -287,10 +298,17 @@ export default function App() {
           </View>
         </View>
       </View>
+      :
+      screen == 12? //Wrong Login Screen
+      <View>
+        <Text>Wrong Username or Password, please press continue to try again</Text>
+        <GenericTextButton label='Continue' onPress={showScreen(1)}></GenericTextButton>
+      </View>
+
 
       :
       <View style={{flex: 1, padding: 100,alignItems: 'center', backgroundColor: '#aaa'}}>
-        <Text>{data[0].guardianFirstName}</Text>
+        <Text>{guardianData[0].guardianPassword}</Text>
       </View> //Empty view should never be reached, for some reason I get error where there's no else statement
     } 
     </SafeAreaProvider> 
