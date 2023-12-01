@@ -51,5 +51,5 @@
   
   // Starting our server.
   app.listen(3001, () => {
-   console.log('Go to http://localhost:3000/queue so you can see the data.');
+   console.log('Go to http://localhost:3001/queue so you can see the data.');
   });
