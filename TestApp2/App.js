@@ -21,7 +21,30 @@ import FetchGuardianFirstName from './components/fetchGuardianFirstName';
 
 
 export default function App() {
-  const [screen, showScreen] = useState(-1);
+  const insertIntoQueueIP = 'http:10.161.103.210:3001/queue'; // Update with your actual server URL
+  const getGuardiansIP = 'http:10.161.103.210:3000/guardians';
+  function insertIntoQueue(postdata, IP){
+    fetch(insertIntoQueueIP, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(postData),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log('Success:', data);
+        // Handle success, if needed
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+        // Handle error, if needed
+      });
+  }
+  const [postData, setPostData] = useState([{
+    idStudent: String, idGuardian: String, studentFirst: String, parentFirst: String, parentLast: String, parentCar: String, studentLast: String, type: String
+  }])
+  const [screen, showScreen] = useState(0);
   const [numChildren, changeChildren] = useState(2);
   // [0 = preLogin screen, 1= loginScreen, 2 = loginVerified]
   /*Redundant code:
@@ -31,20 +54,23 @@ export default function App() {
   const [password, setPasswordForLogin] = useState('');
   const [guardianData, setGuardianData] = useState([]);
   function verifyLogin(U, P, DB){
-    for(let i = 0; i<Object.keys(DB).length; i++)
+    verified = false;
+    for(i = 0; i<Object.keys(DB).length; i++)
     {
       if(U == DB[i].guardianUsername && P == DB[i].guardianLastName)
       {
         showScreen(2);
-      }
-      else{
-        showScreen(12);
+        verified = true;
       }
     }
+    if(verified == false){
+      showScreen(12);
+    }
+    console.log(verified);
   }
   const getGuardians = async () => {
     try {
-      const response = await fetch('http:10.161.103.210:3000/guardians');
+      const response = await fetch(getGuardiansIP);
       const data = await response.json();
       setGuardianData(data);
     } catch (error) {
@@ -73,7 +99,7 @@ export default function App() {
               <Text style={{fontSize: 20}}>New User? </Text>
               <RegisterButton label="Click here to Register!" onPress={() => {showScreen(3)}}> </RegisterButton>
             </View>
-            <View><LoginHereButton label='LOGIN' onPress={() => {verifyLogin(username, password, guardianData)}}/></View>
+            <View><LoginHereButton label='LOGIN' onPress={() => verifyLogin(username, password, guardianData)}/></View>
             <View style={styles.loginBottomBorder}>
               <Text>By continuing you agree with Pick Up Pals Terms of Service and Private Policy.</Text>
             </View>
@@ -300,15 +326,15 @@ export default function App() {
       </View>
       :
       screen == 12? //Wrong Login Screen
-      <View>
+      <View style={styles.container}>
         <Text>Wrong Username or Password, please press continue to try again</Text>
-        <GenericTextButton label='Continue' onPress={showScreen(1)}></GenericTextButton>
+        <GenericTextButton label='Continue' onPress={() => showScreen(1)}></GenericTextButton>
       </View>
 
 
       :
       <View style={{flex: 1, padding: 100,alignItems: 'center', backgroundColor: '#aaa'}}>
-        <Text>{guardianData[0].guardianPassword}</Text>
+        <Text>{guardianData[1].guardianUsername}</Text>
       </View> //Empty view should never be reached, for some reason I get error where there's no else statement
     } 
     </SafeAreaProvider> 
