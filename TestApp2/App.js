@@ -35,7 +35,7 @@ export default function App() {
         body: JSON.stringify({
           idStudent: studentID,
           idGuardian: guardianID,
-          studentFirst: "studentNames",
+          studentFirst: studentNames,
           parentFirst: parentFirstName,
           parentLast: parentLastName,
           parentCar: parentCar,
@@ -261,6 +261,7 @@ export default function App() {
               <BarCodeScanner 
                 onBarCodeScanned={(scanned ? undefined : handleBarCodeScanned)}
                 style={{height: 400, width: 400}}/>
+              <Text>{guardianData[0].guardianLastName}</Text>
               <Text style={styles.QRTextstyle}>{scanned ? 'QR Code Scanned':''}</Text>
               {scanned && <GenericTextButton label={"Scan Again"} onPress={() => (setScanned(false), setQRText(''), showScreen(5)) }/>}
               {scanned && <GenericTextButton label={"See Parent Info"} onPress={()=>(showScreen(13))}/>}
@@ -419,10 +420,10 @@ export default function App() {
           <Text style={{fontSize: 20}}>Parent Last Name:     {currentParentInfo.guardianLastName}</Text>
           <Text style={{fontSize: 20}}>Car Model:       {QRCodeJSON['car']}</Text>
           <Text style={{fontSize: 20}}>Liscence Plate:     {currentParentInfo.guardianLP}</Text>
-          <Text style={{fontSize: 20}}>Children to pick up:      {QRCodeJSON.students}</Text>
+          <Text style={{fontSize: 20}}>Children to pick up:      {QRCodeJSON.students.toString()}</Text>
           <View style={{flexDirection: 'row'}}>
-            <GenericTextButtonGreen label={"Green"} onPress={() => insertData(10, currentParentInfo.idGuardian, QRCodeJSON.students, currentParentInfo.guardianFirstName, currentParentInfo.guardianLastName, QRCodeJSON.car, 'Anderson', 'green')}/>
-            <GenericTextButtonYellow label={"Yellow"}/>
+            <GenericTextButtonGreen label={"Green"} onPress={() => insertData(10, currentParentInfo.idGuardian, QRCodeJSON.students.toString(), currentParentInfo.guardianFirstName, currentParentInfo.guardianLastName, QRCodeJSON.car, 'Anderson', 'green')}/>
+            <GenericTextButtonYellow label={"Yellow"} onPress={() => insertData(10, currentParentInfo.idGuardian, QRCodeJSON.students.toString(), currentParentInfo.guardianFirstName, currentParentInfo.guardianLastName, QRCodeJSON.car, 'Anderson', 'yellow')}/>
           </View>
           <GenericTextButton label={"Scan Again"} onPress={() => (setScanned(false), setQRText(''), showScreen(5))}/>
         </View>
