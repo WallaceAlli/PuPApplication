@@ -49,11 +49,6 @@ export default function App() {
     }
   };
   const [hasPermission, setHasPermission] = useState(null);
-  const [scanned, setScanned] = useState(false);
-  const [QRText, setQRText] = useState("Not Scanned Yet");
-  const [QRCodeJSON, setQRCodeJSON] = useState([]);
-  const [childrenToPickUpParse, setChildrenToPickUpParse] = useState('');
-  const [currentParentInfo, setCurrentParentInfo] = useState([]);
   const askForCameraPermission = () => {
     (async() => {
       const { status} = await BarCodeScanner.requestPermissionsAsync();
@@ -63,6 +58,10 @@ export default function App() {
   useEffect(() => {
     askForCameraPermission()
   }, [])
+  const [scanned, setScanned] = useState(false);
+  const [QRText, setQRText] = useState("Not Scanned Yet");
+  const [QRCodeJSON, setQRCodeJSON] = useState([]);
+  const [currentParentInfo, setCurrentParentInfo] = useState([]);
   const handleBarCodeScanned = ({type, data}) => {
     setScanned(true);
     setQRText(data);
@@ -70,8 +69,8 @@ export default function App() {
   }
 
 
-  const insertIntoQueueIP = 'http:10.10.145.12:3001/queue'; // Update with your actual server URL
-  const getGuardiansIP = 'http:10.10.145.12:3000/guardians';
+  const insertIntoQueueIP = 'http:10.161.104.65:3001/queue'; // Update with your actual server URL
+  const getGuardiansIP = 'http:10.161.104.65:3000/guardians';
   const [screen, showScreen] = useState(5);
   const [numChildren, changeChildren] = useState(2);
   // [0 = preLogin screen, 1= loginScreen, 2 = loginVerified]
@@ -113,6 +112,16 @@ export default function App() {
     }
     console.log("Parent Info Retreived");
   }
+  function getChildInfofromName(first, studDB)
+  {
+    for(i=0; i<Object.keys(studDB).length; i++)
+    {
+      if(studDB[i].studentFirstName == first)
+      {
+        setCurrentStudentData(studDB[i]);
+      }
+    }
+  }
   const getGuardians = async () => {
     try {
       const response = await fetch(getGuardiansIP);
@@ -122,9 +131,23 @@ export default function App() {
       console.error(error);
     }
   };  
+  const [currentStudentData, setCurrentStudentData] = useState([]);
+  var allCurrentStudentData = []
+  const [studentData, setStudentData] = useState([]);
+  
+  const getStudents = async () => {
+    try {
+      const response = await fetch('http:10.161.104.65:3002/students');
+      const data2 = await response.json();
+      setStudentData(data2);
+    } catch (error) {
+      console.error(error);
+    }
+  };  
   useEffect(() => {
     console.log('getGuardians Called');
     getGuardians();
+    getStudents();
   }, []);
   useEffect(() => {
     if(screen == 13)
@@ -145,6 +168,7 @@ export default function App() {
     if(QRCodeJSON.parent)
     {
       getParentInfofromID(QRCodeJSON.parent, guardianData);
+      getChildInfofromName(QRCodeJSON.students[0], studentData);
     }
   }, [QRCodeJSON])
   const [imageUri, setImageUri] = useState(null);
@@ -261,7 +285,6 @@ export default function App() {
               <BarCodeScanner 
                 onBarCodeScanned={(scanned ? undefined : handleBarCodeScanned)}
                 style={{height: 400, width: 400}}/>
-              <Text>{guardianData[0].guardianLastName}</Text>
               <Text style={styles.QRTextstyle}>{scanned ? 'QR Code Scanned':''}</Text>
               {scanned && <GenericTextButton label={"Scan Again"} onPress={() => (setScanned(false), setQRText(''), showScreen(5)) }/>}
               {scanned && <GenericTextButton label={"See Parent Info"} onPress={()=>(showScreen(13))}/>}
@@ -420,12 +443,13 @@ export default function App() {
           <Text style={{fontSize: 20}}>Parent Last Name:     {currentParentInfo.guardianLastName}</Text>
           <Text style={{fontSize: 20}}>Car Model:       {QRCodeJSON['car']}</Text>
           <Text style={{fontSize: 20}}>Liscence Plate:     {currentParentInfo.guardianLP}</Text>
-          <Text style={{fontSize: 20}}>Children to pick up:      {QRCodeJSON.students.toString()}</Text>
+          <Text style={{fontSize: 20}}>Children to pick up:      {QRCodeJSON.students}</Text>
+          <Text>{currentStudentData.studentFirstName}</Text>
           <View style={{flexDirection: 'row'}}>
-            <GenericTextButtonGreen label={"Green"} onPress={() => insertData(10, currentParentInfo.idGuardian, QRCodeJSON.students.toString(), currentParentInfo.guardianFirstName, currentParentInfo.guardianLastName, QRCodeJSON.car, 'Anderson', 'green')}/>
-            <GenericTextButtonYellow label={"Yellow"} onPress={() => insertData(10, currentParentInfo.idGuardian, QRCodeJSON.students.toString(), currentParentInfo.guardianFirstName, currentParentInfo.guardianLastName, QRCodeJSON.car, 'Anderson', 'yellow')}/>
+            <GenericTextButtonGreen label={"Green"} onPress={() => insertData(currentStudentData.idStudent, currentParentInfo.idGuardian, QRCodeJSON.students.toString(), currentParentInfo.guardianFirstName, currentParentInfo.guardianLastName, QRCodeJSON.car, currentStudentData.studentLastName, 'green')}/>
+            <GenericTextButtonYellow label={"Yellow"} onPress={() => insertData(currentStudentData.idStudent, currentParentInfo.idGuardian, QRCodeJSON.students.toString(), currentParentInfo.guardianFirstName, currentParentInfo.guardianLastName, QRCodeJSON.car, currentStudentData.studentLastName, 'yellow')}/>
           </View>
-          <GenericTextButton label={"Scan Again"} onPress={() => (setScanned(false), setQRText(''), showScreen(5))}/>
+          <GenericTextButton label={"Scan Again"} onPress={() => (setScanned(false), setQRText(''), showScreen(5), setQRCodeJSON([]), setCurrentParentInfo([]))}/>
         </View>
         <View style={styles.teacherBottomBorder}>
             <TeacherHomePageButton onPress={() => showScreen(2)}></TeacherHomePageButton>
