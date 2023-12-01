@@ -68,10 +68,9 @@ export default function App() {
     console.log('Type: '+ type + '\nData: ' + data);
   }
 
-
   const insertIntoQueueIP = 'http:10.161.104.65:3001/queue'; // Update with your actual server URL
   const getGuardiansIP = 'http:10.161.104.65:3000/guardians';
-  const [screen, showScreen] = useState(5);
+  const [screen, showScreen] = useState(2);
   const [numChildren, changeChildren] = useState(2);
   // [0 = preLogin screen, 1= loginScreen, 2 = loginVerified]
   /*Redundant code:
@@ -84,7 +83,7 @@ export default function App() {
     verified = false;
     for(i = 0; i<Object.keys(DB).length; i++)
     {
-      if(U == DB[i].guardianUsername && P == DB[i].guardianPassword)
+      if(U == DB[i].facultyUsername && P == DB[i].facultyPassword)
       {
         showScreen(2);
         verified = true;
@@ -131,6 +130,16 @@ export default function App() {
       console.error(error);
     }
   };  
+  const [facultyData, setFacultyData] = useState([]);
+  const getFaculty = async () => {
+    try {
+      const response = await fetch('http:10.161.104.65:3003/faculty');
+      const data = await response.json();
+      setFacultyData(data);
+    } catch (error) {
+      console.error(error);
+    }
+  }; 
   const [currentStudentData, setCurrentStudentData] = useState([]);
   var allCurrentStudentData = []
   const [studentData, setStudentData] = useState([]);
@@ -147,6 +156,7 @@ export default function App() {
   useEffect(() => {
     console.log('getGuardians Called');
     getGuardians();
+    getFaculty();
     getStudents();
   }, []);
   useEffect(() => {
@@ -192,7 +202,7 @@ export default function App() {
               <Text style={{fontSize: 20}}>New User? </Text>
               <RegisterButton label="Click here to Register!" onPress={() => {showScreen(3)}}> </RegisterButton>
             </View>
-            <View><LoginHereButton label='LOGIN' onPress={() => verifyLogin(username, password, guardianData)}/></View>
+            <View><LoginHereButton label='LOGIN' onPress={() => verifyLogin(username, password, facultyData)}/></View>
             <View style={styles.loginBottomBorder}>
               <Text>By continuing you agree with Pick Up Pals Terms of Service and Private Policy.</Text>
             </View>
@@ -216,9 +226,15 @@ export default function App() {
           </View>
           <View style={styles.teacherhomePageMiddle}>
             <Text style={{fontSize: 30, textDecorationLine: 'underline'}}> Announcements: </Text>
-            <Text style={{fontSize: 18, padding: 5, height: 260, backgroundColor: '#aaa'}}>This is a sample announcement. We should put that there are no pickups on dead day for our demo.</Text>
+            <Text style={{fontSize: 18, padding: 5, height: 260, backgroundColor: '#aaa'}}>
+              December 10th: The Pick Up pal Website and Application will undergo updates and will be unavaliable from 10am - 8pm. Please Conduct all requirements the day prior!!!{'\n\n'}
+              December 15th: Represents the One Month Anniversary of the Shaw Elementary School opening so for this Occasion, Pick Up Pal will show its support by creating new courses in order to prepare new Parents for their students first day at school</Text>
             <Text style={{fontSize: 30, textDecorationLine: 'underline'}}> Notifications: </Text>
-            <Text style={{fontSize: 18, padding: 5, height: 260, backgroundColor: '#aaa'}}>This is a sample notification. We should put the kids we are going to be picking pup for our demo</Text>
+            <Text style={{fontSize: 16, padding: 5, height: 260, backgroundColor: '#aaa'}}>
+              December 2nd 2023: There will be a christmas event for all students in the Second Grade, Please Arrive Early and bring the 2 Dollar Entry Fee{'\n\n'}
+              December 4th 2023: The Annnual Fast Food Drive will begin on the 4th of December, This year we will be donating cans to different Homeless Shelters around the County.{'\n\n'} 
+              December 20th 2023: Last Day of School, Mandatory Attendance for all Students
+            </Text>
           </View>
           <View style={styles.teacherBottomBorder}>
             <TeacherHomePageButton onPress={() => showScreen(2)}></TeacherHomePageButton>
@@ -443,8 +459,8 @@ export default function App() {
           <Text style={{fontSize: 20}}>Parent Last Name:     {currentParentInfo.guardianLastName}</Text>
           <Text style={{fontSize: 20}}>Car Model:       {QRCodeJSON['car']}</Text>
           <Text style={{fontSize: 20}}>Liscence Plate:     {currentParentInfo.guardianLP}</Text>
+          <Text style={{fontSize: 20}}>Driver's Liscence Number:     {currentParentInfo.guardianDLNumber}</Text>
           <Text style={{fontSize: 20}}>Children to pick up:      {QRCodeJSON.students}</Text>
-          <Text>{currentStudentData.studentFirstName}</Text>
           <View style={{flexDirection: 'row'}}>
             <GenericTextButtonGreen label={"Green"} onPress={() => insertData(currentStudentData.idStudent, currentParentInfo.idGuardian, QRCodeJSON.students.toString(), currentParentInfo.guardianFirstName, currentParentInfo.guardianLastName, QRCodeJSON.car, currentStudentData.studentLastName, 'green')}/>
             <GenericTextButtonYellow label={"Yellow"} onPress={() => insertData(currentStudentData.idStudent, currentParentInfo.idGuardian, QRCodeJSON.students.toString(), currentParentInfo.guardianFirstName, currentParentInfo.guardianLastName, QRCodeJSON.car, currentStudentData.studentLastName, 'yellow')}/>
